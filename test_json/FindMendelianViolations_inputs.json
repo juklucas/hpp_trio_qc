@@ -1,0 +1,11 @@
+{
+  "findMendelienVariations.combineGVCFs.memSizeGB": "4",
+  "findMendelienVariations.region": "chr20",
+  "findMendelienVariations.referenceFasta": "/home/juklucas/reference/ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa",
+  "findMendelienVariations.refDict": "/home/juklucas/reference/ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.dict",
+  "findMendelienVariations.refIndex": "/home/juklucas/reference/ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa.fai",
+  "findMendelienVariations.ouputGVCFName": "SH012-trio-plus-other.chr20.g.vcf",
+  "findMendelienVariations.ouputVCFName": "SH012-trio-plus-other.chr20.vcf",
+  "findMendelienVariations.gvcfTrioArray": ["/home/juklucas/analysis/input_vcfs/HG00436.haplotypeCalls.er.raw.g.vcf.gz", "/home/juklucas/analysis/input_vcfs/HG00437.haplotypeCalls.er.raw.g.vcf.gz", "/home/juklucas/analysis/input_vcfs/HG00438.haplotypeCalls.er.raw.vcf.gz"],
+  "findMendelienVariations.gvcfTrioArrayIndex":["/home/juklucas/analysis/input_vcfs/HG00436.haplotypeCalls.er.raw.g.vcf.gz.tbi", "/home/juklucas/analysis/input_vcfs/HG00437.haplotypeCalls.er.raw.g.vcf.gz.tbi", "/home/juklucas/analysis/input_vcfs/HG00438.haplotypeCalls.er.raw.vcf.gz.tbi"]
+}
