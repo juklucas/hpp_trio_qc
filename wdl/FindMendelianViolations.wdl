@@ -1,9 +1,10 @@
 version 1.0
 
-workflow findMendelienVariations {
+workflow findMendelianVariations {
     input {
         Array[File] gvcfTrioArray
         Array[File] gvcfTrioArrayIndex
+	File pedigree
         File referenceFasta
         File refIndex
         File refDict
@@ -11,6 +12,7 @@ workflow findMendelienVariations {
         String dockerImage = "broadinstitute/gatk:4.1.3.0"
         String ouputGVCFName
         String ouputVCFName
+	String outputMetrics
     }
 
     call combineGVCFs {
@@ -37,12 +39,23 @@ workflow findMendelienVariations {
             dockerImage=dockerImage
     }
 
+    call findMendelianViolations {
+        input:
+            inputVCF=genotypeGVCFs.outputCombinedVCF,
+            inutVCFIndex=genotypeGVCFs.outputCombinedVCFIndex,
+            pedigree=pedigree,
+            outputMetrics=outputMetrics,
+            dockerImage=dockerImage
+    }
+
     output {
         File combinedGVCF    = combineGVCFs.outputCombinedGVCF
         File combinedGVCFIdx = combineGVCFs.outputCombinedGVCFIndex
 
         File combinedVCF     = genotypeGVCFs.outputCombinedVCF
         File combinedVCFIdx  = genotypeGVCFs.outputCombinedVCFIndex
+
+        File Metrics   = findMendelianViolations.outputMetricsFile
     }
 }
 
@@ -138,8 +151,43 @@ task genotypeGVCFs {
     }
 }
 
+task findMendelianViolations {
+
+    input {
+        File inputVCF
+        File inutVCFIndex
+        File pedigree
+        String outputMetrics
+
+        Int memSizeGB = 4
+        Int diskSizeGB = 128
+        String dockerImage
+    }
 
 
+    command <<<
+
+        set -o pipefail
+        set -e
+        set -u
+        set -o xtrace
 
 
+        gatk FindMendelianViolations \
+            -I ~{inputVCF} \
+            -PED ~{pedigree} \
+            -MIN_DP 10 \
+            -O ~{outputMetrics}
+    >>>
+
+    output {
+        File outputMetricsFile = outputMetrics
+    }
+
+    runtime {
+        memory: memSizeGB + " GB"
+        disks: "local-disk " + diskSizeGB + " SSD"
+        docker: dockerImage
+    }
+}
 
