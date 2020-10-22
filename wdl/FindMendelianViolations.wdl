@@ -102,6 +102,7 @@ task combineGVCFs {
         memory: memSizeGB + " GB"
         disks: "local-disk " + diskSizeGB + " SSD"
         docker: dockerImage
+	preemptible: 1
     }
 }
 
@@ -120,7 +121,6 @@ task genotypeGVCFs {
         Int memSizeGB = 4
         Int diskSizeGB = 128
         String dockerImage
-	preemptible: 1
     }
 
 
