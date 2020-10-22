@@ -10,8 +10,8 @@ workflow findMendelianVariations {
         File refDict
         String region
         String dockerImage = "broadinstitute/gatk:4.1.3.0"
-        String ouputGVCFName
-        String ouputVCFName
+        String outputGVCFName
+        String outputVCFName
 	String outputMetrics
     }
 
@@ -23,7 +23,7 @@ workflow findMendelianVariations {
             refIndex=refIndex,
             refDict=refDict,
             region=region,
-            ouputGVCFName=ouputGVCFName,
+            outputGVCFName=outputGVCFName,
             dockerImage=dockerImage
     }
 
@@ -35,7 +35,7 @@ workflow findMendelianVariations {
             refIndex=refIndex,
             refDict=refDict,
             region=region,
-            ouputVCFName=ouputVCFName,
+            outputVCFName=outputVCFName,
             dockerImage=dockerImage
     }
 
@@ -69,8 +69,8 @@ task combineGVCFs {
         File refIndex
         File refDict
         String region
-        String ouputGVCFName
-        String ouputGVCFIndexName = "${ouputGVCFName}.idx"
+        String outputGVCFName
+        String outputGVCFIndexName = "${outputGVCFName}.idx"
 
         Int memSizeGB = 4
         Int diskSizeGB = 128
@@ -90,12 +90,12 @@ task combineGVCFs {
             -V ~{sep=' -V'  gvcfTrioArray} \
             -L ~{region} \
             --allow-old-rms-mapping-quality-annotation-data \
-            -O ~{ouputGVCFName}
+            -O ~{outputGVCFName}
     >>>
 
     output {
-        File outputCombinedGVCF = ouputGVCFName
-        File outputCombinedGVCFIndex = ouputGVCFIndexName
+        File outputCombinedGVCF = outputGVCFName
+        File outputCombinedGVCFIndex = outputGVCFIndexName
     }
 
     runtime {
@@ -114,12 +114,13 @@ task genotypeGVCFs {
         File refIndex
         File refDict
         String region
-        String ouputVCFName
-        String ouputVCFIndexName = "${ouputVCFName}.idx"
+        String outputVCFName
+        String outputVCFIndexName = "${outputVCFName}.idx"
 
         Int memSizeGB = 4
         Int diskSizeGB = 128
         String dockerImage
+	preemptible: 1
     }
 
 
@@ -136,18 +137,19 @@ task genotypeGVCFs {
             -V ~{inputGVCF} \
             -L ~{region} \
             --allow-old-rms-mapping-quality-annotation-data \
-            -O ~{ouputVCFName}
+            -O ~{outputVCFName}
     >>>
 
     output {
-        File outputCombinedVCF = ouputVCFName
-        File outputCombinedVCFIndex = ouputVCFIndexName
+        File outputCombinedVCF = outputVCFName
+        File outputCombinedVCFIndex = outputVCFIndexName
     }
 
     runtime {
         memory: memSizeGB + " GB"
         disks: "local-disk " + diskSizeGB + " SSD"
         docker: dockerImage
+	preemptible: 1
     }
 }
 
@@ -188,6 +190,7 @@ task findMendelianViolations {
         memory: memSizeGB + " GB"
         disks: "local-disk " + diskSizeGB + " SSD"
         docker: dockerImage
+        preemptible: 1
     }
 }
 
